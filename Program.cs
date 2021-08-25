@@ -26,15 +26,13 @@ namespace RNG
             }
             WriteToCSV(testSet);
 
-        }
-                
-        
-        public static int DRoot(int input)
+        }  
+        public static int DigitizeRoot(int input)
         {
             if (input >= 10)
             {
                 input = 1 +(input % 10);
-                DRoot(input);
+                DigitizeRoot(input);
             }
             return input;
         }
@@ -47,7 +45,7 @@ namespace RNG
                 Random s = new Random();
                 if (s.Next(1, 10) > i)
                 {
-                  output.Add(DRoot(i + s.Next(1, 10)));
+                  output.Add(DigitizeRoot(i + s.Next(1, 10)));
                 }
                 else
                 {
@@ -56,7 +54,7 @@ namespace RNG
             }
             return output;
         }
-        public static void PrintA(ArrayList input)
+        public static void PrintArrayList(ArrayList input)
         {
             foreach(int i in input)
             {
@@ -64,7 +62,7 @@ namespace RNG
             }
             Console.WriteLine();
         }
-        public static void Cenario()
+        public static void Scenario()
         {
             Random randNum = new Random();
             ArrayList dataset = new ArrayList();
@@ -73,9 +71,9 @@ namespace RNG
                 dataset.Add(randNum.Next(1, 10));
             }
             Console.WriteLine("dataset");
-            PrintA(dataset);
+            PrintArrayList(dataset);
             Console.WriteLine("dataset_modified");
-            PrintA(RNGL2(dataset));
+            PrintArrayList(RNGL2(dataset));
         }
         public static void AddCSV(ArrayList Number, string filepath)
         {
