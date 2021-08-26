@@ -15,7 +15,8 @@ namespace RNG
 
             Random r = new Random();
 
-            for (int i = 0; i < 400; i++)
+            for (int i = 0; i < 10000; i++)
+
             {
                 testSet.Add(r.Next(1, 10));
             }
@@ -91,7 +92,7 @@ namespace RNG
             }
         }
     
-        public async static void WriteToCSV(ArrayList printArray)
+        public static void WriteToCSV(ArrayList printArray)
         {
 
             String desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
@@ -101,13 +102,14 @@ namespace RNG
             {
                 Console.WriteLine("CSV Doesn't exist...creating file");
                 using StreamWriter streamWriter = new StreamWriter(fullFilePath);
+
                 Console.WriteLine("File created");
 
                 int printCounter = 0;
                 foreach (int i in printArray)
                 {
                     Console.WriteLine("Print Counter: " + printCounter++);
-                    await streamWriter.WriteAsync(i + ",");
+                    streamWriter.Write(i + ",");
                 }
 
             }
@@ -118,11 +120,12 @@ namespace RNG
                 {
 
                     using StreamWriter streamWriter = File.AppendText(fullFilePath);
-                    await streamWriter.WriteLineAsync();
+                    streamWriter.AutoFlush = true;
+                    streamWriter.WriteLine();
                     int printCounter = 0;
                     foreach (int i in printArray)
                     {
-                        await streamWriter.WriteAsync(i + ",");
+                        streamWriter.Write(i + ",");
                         Console.WriteLine("Print Counter: " + printCounter++);
 
                     }
