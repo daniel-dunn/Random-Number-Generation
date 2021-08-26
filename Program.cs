@@ -11,20 +11,21 @@ namespace RNG
         static void Main(string[] args)
         {
 
-            /*for (int i = 0; i < 9; i++)
-            {
-                Cenario();
-            }
-            */
-            ArrayList testSet = new ArrayList();
+            ArrayList testSet = new ArrayList(); //This will be the benchmark random set of numbers;
 
             Random r = new Random();
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 400; i++)
             {
                 testSet.Add(r.Next(1, 10));
             }
+
+            ArrayList modifiedSet = RNGL2(testSet);
+
+
+           
             WriteToCSV(testSet);
+            WriteToCSV(modifiedSet);
 
         }  
         public static int DigitizeRoot(int input)
@@ -43,14 +44,14 @@ namespace RNG
             foreach (int i in input)
             {
                 Random s = new Random();
+                int outputInt = i;
                 if (s.Next(1, 10) > i)
                 {
-                  output.Add(DigitizeRoot(i + s.Next(1, 10)));
+                  outputInt = DigitizeRoot(i + s.Next(1, 10));
                 }
-                else
-                {
-                  output.Add(i);
-                }
+                
+                output.Add(outputInt);
+                
             }
             return output;
         }
@@ -93,12 +94,43 @@ namespace RNG
         public async static void WriteToCSV(ArrayList printArray)
         {
 
-            String filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            String desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            String fullFilePath = Path.Combine(desktopPath, "RNGOutput.csv");
 
-            using StreamWriter streamWriter = new StreamWriter(Path.Combine(filePath,"RNGOutput.csv"));
-            foreach (int i in printArray)
+            if (!File.Exists(fullFilePath))
             {
-               await streamWriter.WriteAsync(i + ",");
+                Console.WriteLine("CSV Doesn't exist...creating file");
+                using StreamWriter streamWriter = new StreamWriter(fullFilePath);
+                Console.WriteLine("File created");
+
+                int printCounter = 0;
+                foreach (int i in printArray)
+                {
+                    Console.WriteLine("Print Counter: " + printCounter++);
+                    await streamWriter.WriteAsync(i + ",");
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("CSV exists - appending...");
+                try
+                {
+
+                    using StreamWriter streamWriter = File.AppendText(fullFilePath);
+                    await streamWriter.WriteLineAsync();
+                    int printCounter = 0;
+                    foreach (int i in printArray)
+                    {
+                        await streamWriter.WriteAsync(i + ",");
+                        Console.WriteLine("Print Counter: " + printCounter++);
+
+                    }
+
+                }
+
+                catch { }
+
             }
         }  
     }
