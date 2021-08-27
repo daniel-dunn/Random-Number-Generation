@@ -1,6 +1,7 @@
 ﻿using System;
 using CsvHelper;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Data;
 
@@ -15,7 +16,7 @@ namespace RNG
 
             Random r = new Random();
 
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 1000000; i++)
 
             {
                 testSet.Add(r.Next(1, 10));
@@ -24,9 +25,17 @@ namespace RNG
             ArrayList modifiedSet = RNGL2(testSet);
 
 
-           
-            WriteToCSV(testSet);
-            WriteToCSV(modifiedSet);
+
+            /*
+             * WriteToCSV(testSet);
+             * WriteToCSV(modifiedSet);
+            */
+
+            Console.WriteLine("Analysis of Dataset:");
+            PrintDictionary(AnalyseFrequency(testSet));
+            Console.WriteLine();
+            Console.WriteLine("Analysis of Modified Dataset");
+            PrintDictionary(AnalyseFrequency(modifiedSet));
 
         }  
         public static int DigitizeRoot(int input)
@@ -100,7 +109,7 @@ namespace RNG
 
             if (!File.Exists(fullFilePath))
             {
-                Console.WriteLine("CSV Doesn't exist...creating file");
+                //Console.WriteLine("CSV Doesn't exist...creating file");
                 using StreamWriter streamWriter = new StreamWriter(fullFilePath);
 
                 Console.WriteLine("File created");
@@ -108,14 +117,14 @@ namespace RNG
                 int printCounter = 0;
                 foreach (int i in printArray)
                 {
-                    Console.WriteLine("Print Counter: " + printCounter++);
+                    //Console.WriteLine("Print Counter: " + printCounter++);
                     streamWriter.Write(i + ",");
                 }
 
             }
             else
             {
-                Console.WriteLine("CSV exists - appending...");
+                //Console.WriteLine("CSV exists - appending...");
                 try
                 {
 
@@ -126,7 +135,7 @@ namespace RNG
                     foreach (int i in printArray)
                     {
                         streamWriter.Write(i + ",");
-                        Console.WriteLine("Print Counter: " + printCounter++);
+                        //Console.WriteLine("Print Counter: " + printCounter++);
 
                     }
 
@@ -136,5 +145,30 @@ namespace RNG
 
             }
         }  
+
+        public static SortedDictionary<int,int> AnalyseFrequency(ArrayList input)
+        {
+            //instanciation and enumeration of digit-frequncy map <key,value> -> <digit,count>
+            SortedDictionary<int, int> digitFrequencyMap = new SortedDictionary<int, int>();
+            for(int i = 1; i<10; i++)
+            {
+                digitFrequencyMap.Add(i, 0);
+            }
+
+            foreach(int i in input)
+            {
+                digitFrequencyMap[i] = ++digitFrequencyMap[i];
+            }
+
+            return digitFrequencyMap;
+        }
+
+        public static void PrintDictionary(SortedDictionary<int,int> dictionary)
+        {
+            foreach(KeyValuePair<int,int> kvp in dictionary)
+            {
+                Console.WriteLine("<" + kvp.Key + "," + kvp.Value + ">");
+            }
+        }
     }
 }
