@@ -1,25 +1,35 @@
 ﻿using System;
-using CsvHelper;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Data;
 
 namespace RNG
 {
     class Program
     {
+        public static int dataAmount;
         static void Main(string[] args)
         {
-
+            dataAmount = 0;
             ArrayList testSet = new ArrayList(); //This will be the benchmark random set of numbers;
 
             Random r = new Random();
 
-            for (int i = 0; i < 1000000; i++)
+            Console.WriteLine("Please enter amount of data you'd like to generate: ");
 
+            dataAmount = Int32.Parse(Console.ReadLine());
+
+            for (int i = 0; i < dataAmount; i++)
             {
-                testSet.Add(r.Next(1, 10));
+                int randomProduct = r.Next(1, 10) * r.Next(1, 10);
+                int digitizedProduct = DigitizeRoot(randomProduct);
+                if(digitizedProduct > 9)
+                {
+                    Console.WriteLine("Digitized Prodct = " + digitizedProduct);
+                    Console.WriteLine("Random Product = " + randomProduct);
+                }
+                int data = digitizedProduct;
+                testSet.Add(data);
             }
 
             ArrayList modifiedSet = RNGL2(testSet);
@@ -40,9 +50,11 @@ namespace RNG
         }  
         public static int DigitizeRoot(int input)
         {
-            if (input >= 10)
+
+            
+            while (input > 9)
             {
-                input = 1 +(input % 10);
+                input = 1 + (input % 10);
                 DigitizeRoot(input);
             }
             return input;
@@ -167,7 +179,9 @@ namespace RNG
         {
             foreach(KeyValuePair<int,int> kvp in dictionary)
             {
-                Console.WriteLine("<" + kvp.Key + "," + kvp.Value + ">");
+                double percentage = (kvp.Value * 100) / dataAmount;
+                
+                Console.WriteLine("<" + kvp.Key + "," + kvp.Value + "," + Math.Round(percentage,2).ToString() + "%>");
             }
         }
     }
